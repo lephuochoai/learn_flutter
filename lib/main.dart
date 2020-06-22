@@ -6,19 +6,10 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final wordPair = WordPair.random();
-    final wordPair = WordPair.random();
-
     return MaterialApp(
       title: 'Home Screen',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Home Screen'),
-        ),
-        body: Center(
-          child: RandomWords(),
-        ),
-      ),
+      home: RandomWords(),
+      theme: ThemeData(primaryColor: Colors.deepPurple[900]),
     );
   }
 }
@@ -34,12 +25,20 @@ class RandomWordState extends State<RandomWords> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(itemBuilder: (context, index) {
-      if (index >= _words.length) {
-        _words.addAll(generateWordPairs().take(10));
-      }
-      return _buildRow(_words[index]);
-    });
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Screen'),
+        actions: <Widget>[
+          new IconButton(icon: const Icon(Icons.list), onPressed: _pushSaved)
+        ],
+      ),
+      body: Center(child: ListView.builder(itemBuilder: (context, index) {
+        if (index >= _words.length) {
+          _words.addAll(generateWordPairs().take(10));
+        }
+        return _buildRow(_words[index]);
+      })),
+    );
   }
 
   Widget _buildRow(WordPair wordPair) {
@@ -59,5 +58,33 @@ class RandomWordState extends State<RandomWords> {
             alreadySaved ? _saved.remove(wordPair) : _saved.add(wordPair);
           });
         });
+  }
+
+  void _pushSaved() {
+    Navigator.of(context)
+        .push(new MaterialPageRoute<void>(builder: (BuildContext context) {
+      final titles = _saved.map((WordPair pair) {
+        return new ListTile(
+          title: new Text(
+            pair.asPascalCase,
+            // style: ,
+          ),
+        );
+      });
+
+      print(titles);
+
+      final List<Widget> divided =
+          ListTile.divideTiles(tiles: titles, context: context).toList();
+
+      return new Scaffold(
+        appBar: new AppBar(
+          title: const Text('Saved List'),
+        ),
+        body: new ListView(
+          children: divided,
+        ),
+      );
+    }));
   }
 }
