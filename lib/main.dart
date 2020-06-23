@@ -1,44 +1,39 @@
 import 'package:flutter/material.dart';
+import 'tabs-test/Tab1.dart';
+import 'tabs-test/Tab2.dart';
+import 'tabs-test/Tab3.dart';
+import 'tabs-test/Tab4.dart';
 
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
-  // Tạo key cho context
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  _showSnackBar() {
-    print("show notification");
-    final snackBar = new SnackBar(
-      content: new Text('This is a SnackBar'),
-      duration: new Duration(seconds: 3),
-      backgroundColor: Colors.green,
-      action: new SnackBarAction(
-          label: 'OK',
-          onPressed: () {
-            print('Press OK on SnackBar');
-          }),
-    );
-
-    // Để hiện snack thì pahri cho biết nó hiện từ đâu ( từ _scaffoldKey )
-    _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My App',
-      home: new Scaffold(
-        key: _scaffoldKey,
-        appBar: new AppBar(
-          title: Text('SnackBar show notification'),
-          actions: <Widget>[
-            new IconButton(
-              icon: new Icon(Icons.info),
-              onPressed: _showSnackBar,
+    final tabs = new DefaultTabController(
+        length: 4,
+        child: new Scaffold(
+          appBar: new AppBar(
+            backgroundColor: Colors.deepOrangeAccent,
+            title: new Text('Tabs'),
+            bottom: new TabBar(
+              tabs: [
+                new Tab(icon: Icon(Icons.home), text: 'Home'),
+                new Tab(icon: Icon(Icons.group), text: 'Group'),
+                new Tab(icon: Icon(Icons.chat), text: 'Chat'),
+                new Tab(icon: Icon(Icons.cloud_queue), text: 'Cloud'),
+              ],
+              indicatorColor: Colors.yellow,
+              indicatorWeight: 2,
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+          body: new TabBarView(children: [
+            new Tabs1(),
+            new Tabs2(),
+            new Tabs3(),
+            new Tabs4(),
+          ]),
+        ));
+
+    return MaterialApp(title: 'My App', home: tabs);
   }
 }
